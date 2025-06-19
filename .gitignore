@@ -2,3 +2,6 @@
 *.p12
 /.env
 composer.lock
+.idea
+/.vscode
+*Zone.Identifier
