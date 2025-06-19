@@ -1,7 +1,7 @@
 <?php
 
 require 'vendor/autoload.php';
-
+use Dotenv\Dotenv;
 use App\Classes\AvanzaSIP;
 use App\Classes\Encrypt;
 use App\Enums\CalificacionOperacion;
@@ -12,15 +12,17 @@ use App\Models\Client;
 use App\Models\Empresa;
 use App\Models\Factura;
 use App\Models\FacturaImpuesto;
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 $empresa = new Empresa(
     Nombre: "ESCUELA SUPERIOR TERAPIAS NATURALES BCN, S.L.",
     CIF: "B66819186",
     RazonSocial: "ESCUELA SUPERIOR TERAPIAS NATURALES BCN, S.L.",
-    certificate: './47827843X_XIN_YUE_CALDUCH__R__B66819186_.p12',
+    certificate: $_ENV['PRIVATE_PATH'],
     Verifactu: true);
 $client = new Client(NIF:'47820149K', RazonSocial: 'Alan Bertomeu Culvi');
-$password = (new Encrypt(publicKey: "./public_key.pem"))->encrypt("123456");
+$password = (new Encrypt(publicKey: "./public_key.pem"))->encrypt($_ENV['PRIVATE_PASSWD']);
 $avanzaSIP = new AvanzaSIP(
     certificate: $empresa->certificate,
     password: $password,
