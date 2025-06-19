@@ -1,4 +1,4 @@
 /vendor/
 *.p12
 /.env
-/composer.lock
+composer.lock
