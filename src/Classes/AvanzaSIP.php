@@ -1,7 +1,7 @@
 <?php
 namespace App\Classes;
 
-use App\Models\AvanzaSIPFactura;
+use App\Models\Factura;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -91,7 +91,7 @@ class AvanzaSIP
             'multipart' => [
                 [
                     'name' => 'certificado',
-                    'contents' => fopen($this->certificate, 'r'),
+                    'contents' => fopen($this->certificate, 'rb'),
                     'filename' => basename($this->certificate)
                 ],
                 [
@@ -117,18 +117,17 @@ class AvanzaSIP
             throw new \Exception("Request failed: " . $e->getMessage(), $e->getCode());
         }
     }
-    public function altaFactura(AvanzaSIPFactura $factura)
+    public function altaFactura(Factura $factura)
     {
         return $this->goCurl('altaFactura', $factura->toAlta("123456"));
     }
-    public function editFactura(AvanzaSIPFactura $factura, string $idFacturaAntigua)
+    public function editFactura(Factura $factura, string $idFacturaAntigua)
     {
         return $this->goCurl('altaFactura', $factura->toEdit("123456" , $idFacturaAntigua));
     }
     public function consultCompany($data)
     {
-        $result = $this->goCurl('consultCompany', $data);
-        return $result->Exist;
+        return $this->goCurl('consultCompany', $data)->Exist;
     }
     public function createCompany($data)
     {

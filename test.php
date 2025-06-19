@@ -3,24 +3,24 @@
 require 'vendor/autoload.php';
 
 use App\Classes\AvanzaSIP;
-use App\Classes\AvanzaSIPEncrypt;
+use App\Classes\Encrypt;
 use App\Enums\CalificacionOperacion;
 use App\Enums\OperacionExcenta;
 use App\Enums\TipoFactura;
 use App\Enums\TipoImpuesto;
-use App\Models\AvanzaSIPClient;
-use App\Models\AvanzaSIPEmpresa;
-use App\Models\AvanzaSIPFactura;
-use App\Models\AvanzaSIPFacturaImpuesto;
+use App\Models\Client;
+use App\Models\Empresa;
+use App\Models\Factura;
+use App\Models\FacturaImpuesto;
 
-$empresa = new AvanzaSIPEmpresa(
+$empresa = new Empresa(
     Nombre: "ESCUELA SUPERIOR TERAPIAS NATURALES BCN, S.L.",
     CIF: "B66819186",
     RazonSocial: "ESCUELA SUPERIOR TERAPIAS NATURALES BCN, S.L.",
     certificate: './47827843X_XIN_YUE_CALDUCH__R__B66819186_.p12',
     Verifactu: true);
-$client = new AvanzaSIPClient(NIF:'47820149K', RazonSocial: 'Alan Bertomeu Culvi');
-$password = (new AvanzaSIPEncrypt(publicKey: "./public_key.pem"))->encrypt("123456");
+$client = new Client(NIF:'47820149K', RazonSocial: 'Alan Bertomeu Culvi');
+$password = (new Encrypt(publicKey: "./public_key.pem"))->encrypt("123456");
 $avanzaSIP = new AvanzaSIP(
     certificate: $empresa->certificate,
     password: $password,
@@ -31,7 +31,7 @@ if(!$avanzaSIP->consultCompany($empresa->toConsulta())){
     $responseCC = $avanzaSIP->createCompany($empresa->toCreate());
     var_dump($responseCC);
 } else {
-    $factura = new AvanzaSIPFactura(
+    $factura = new Factura(
         serie: "R",
         numFactura: "00001",
         fechaEmision: new \DateTime(),
@@ -40,7 +40,7 @@ if(!$avanzaSIP->consultCompany($empresa->toConsulta())){
         client: $client,
         empresa: $empresa
     );
-    $factura->addImpuestoDetalle(new AvanzaSIPFacturaImpuesto(
+    $factura->addImpuestoDetalle(new FacturaImpuesto(
         tipoImpuesto: TipoImpuesto::IVA,
         regimen: "01",
         calificacionOperacion: CalificacionOperacion::OPERACION_SUJETA,
@@ -49,7 +49,7 @@ if(!$avanzaSIP->consultCompany($empresa->toConsulta())){
         cuota: 2.1
     ));
 
-    $factura->addImpuestoDetalle(new AvanzaSIPFacturaImpuesto(
+    $factura->addImpuestoDetalle(new FacturaImpuesto(
         tipoImpuesto: TipoImpuesto::IVA,
         regimen: "01",
         calificacionOperacion: CalificacionOperacion::OPERACION_SUJETA,
@@ -62,7 +62,7 @@ if(!$avanzaSIP->consultCompany($empresa->toConsulta())){
         $responseQR = $avanzaSIP->getQR($responseInvoice->id);
     }
 
-    $factura = new AvanzaSIPFactura(
+    $factura = new Factura(
         serie: "W",
         numFactura: "00003",
         fechaEmision: new \DateTime(),
@@ -71,7 +71,7 @@ if(!$avanzaSIP->consultCompany($empresa->toConsulta())){
         client: $client,
         empresa: $empresa
     );
-    $factura->addImpuestoDetalle(new AvanzaSIPFacturaImpuesto(
+    $factura->addImpuestoDetalle(new FacturaImpuesto(
         tipoImpuesto: TipoImpuesto::IVA,
         regimen: "01",
         calificacionOperacion: CalificacionOperacion::OPERACION_NO_SUJETA_OTROS,
