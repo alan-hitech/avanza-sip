@@ -17,7 +17,7 @@ class Factura
     public float $importe;
     public float $impuestos;
     public array $impuestosDetalle;
-
+    public ?string $originalID;
     /**
      * @return string
      */
@@ -182,7 +182,27 @@ class Factura
         $this->serie = $serie;
     }
 
-    public function __construct(string $serie, string $numFactura, DateTime $fechaEmision, TipoFactura $tipoFactura, string $descripcion, Client $client, Empresa $empresa)
+    public function getOriginalID(): string
+    {
+        return $this->originalID;
+    }
+
+    public function setOriginalID(?string $originalID): void
+    {
+        $this->originalID = $originalID;
+    }
+
+    public function getEmpresa(): ?Empresa
+    {
+        return $this->empresa;
+    }
+
+    public function setEmpresa(Empresa $empresa): void
+    {
+        $this->empresa = $empresa;
+    }
+
+    public function __construct(string $serie, string $numFactura, DateTime $fechaEmision, TipoFactura $tipoFactura, string $descripcion, Client $client, Empresa $empresa, ?string $originalID = null)
     {
         $this->serie = $serie;
         $this->numFactura = $numFactura;
@@ -191,15 +211,26 @@ class Factura
         $this->descripcion = $descripcion;
         $this->client = $client;
         $this->empresa = $empresa;
+        $this->originalID = $originalID;
     }
 
-    public function toAlta(string $password, ?string$edit=null): \stdClass
+    public function getId(): string
+    {
+        return "{$this->empresa->CIF}-{$this->serie}-{$this->numFactura}";
+    }
+    public function toQR():\stdClass
+    {
+        $data = new \stdClass();
+        $data->id = $this->getId();
+        return $data;
+    }
+    public function toAlta(?bool $edit = false): \stdClass
     {
         $data = new stdClass();
        // $data->Password = new Encrypt()->encrypt($password);
         $data->serie = $this->serie;
-        if($edit!==null)
-            $data->id = $edit;
+        if($this->originalID !== null)
+            $data->id = $this->originalID;
         $data->numero = $this->numFactura;
         $data->Cabecera = new stdClass();
         $data->Cabecera->NIF = $this->empresa->CIF;
@@ -230,8 +261,16 @@ class Factura
         return $data;
     }
 
-    public function toEdit($password, $idFacturaAntigua): \stdClass
+    public function toEdit(): \stdClass
     {
-        return $this->toAlta($password, $idFacturaAntigua);
+        return $this->toAlta(edit: true);
+    }
+
+    public function toConsulta(): \stdClass
+    {
+        $data = new stdClass();
+        $data->id = $this->getId();
+        return $data;
+
     }
 }

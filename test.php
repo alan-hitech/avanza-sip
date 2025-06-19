@@ -27,40 +27,46 @@ $avanzaSIP = new AvanzaSIP(
     certificate: $empresa->certificate,
     password: $password,
     authToken: "dda7f70673a526d54f64b94faf6639f834d12328",
-    test: true
+    test: true,
+    debug: true
 );
-if(!$avanzaSIP->consultCompany($empresa->toConsulta())){
-    $responseCC = $avanzaSIP->createCompany($empresa->toCreate());
+if(!$avanzaSIP->consultCompany($empresa)){
+    $responseCC = $avanzaSIP->createCompany($empresa);
     var_dump($responseCC);
 } else {
     $factura = new Factura(
-        serie: "R",
+        serie: "W",
         numFactura: "00001",
         fechaEmision: new \DateTime(),
-        tipoFactura: TipoFactura::RECTIFICATIVA_ART_80_UNO_DOS_SEIS,
+        tipoFactura: TipoFactura::FACTURA,
         descripcion: "Servicios",
         client: $client,
-        empresa: $empresa
+        empresa: $empresa,
     );
-    $factura->addImpuestoDetalle(new FacturaImpuesto(
+    var_dump($avanzaSIP->consultaFactura($factura));
+    die();
+    $factura->setSerie("T");
+    $impuesto = new FacturaImpuesto(
         tipoImpuesto: TipoImpuesto::IVA,
         regimen: "01",
         calificacionOperacion: CalificacionOperacion::OPERACION_SUJETA,
         impuesto: 21,
-        baseImponible: 10,
-        cuota: 2.1
-    ));
+        baseImponible: 1000,
+        cuota: 210
+    );
+    $factura->addImpuestoDetalle($impuesto);
 
-    $factura->addImpuestoDetalle(new FacturaImpuesto(
-        tipoImpuesto: TipoImpuesto::IVA,
-        regimen: "01",
-        calificacionOperacion: CalificacionOperacion::OPERACION_SUJETA,
-        impuesto: 10,
-        baseImponible: 10,
-        cuota: 1
-    ));
-    $responseInvoice = $avanzaSIP->editFactura($factura, "B66819186-W-00001");
+    $responseInvoice = $avanzaSIP->altaFactura($factura);
     if(isset($responseInvoice->id)){
+        echo $responseInvoice->id.' - PRIMEWRA FAC';
+        $factura->setOriginalID($responseInvoice->id);
+        $numFac = (int)$factura->getNumFactura()+1;
+        $factura->setNumFactura($numFac);
+        $factura->setTipoFactura(TipoFactura::RECTIFICATIVA_ART_80_UNO_DOS_SEIS);
+        $impuesto->baseImponible = 100;
+        $impuesto->cuota = 21;
+        $factura->setImpuestosDetalle([$impuesto]);
+        $responseInvoice = $avanzaSIP->altaFactura($factura);
         $responseQR = $avanzaSIP->getQR($responseInvoice->id);
     }
 

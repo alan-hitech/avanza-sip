@@ -2,6 +2,7 @@
 namespace App\Classes;
 
 use App\Models\Factura;
+use App\Models\Empresa;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -119,24 +120,26 @@ class AvanzaSIP
     }
     public function altaFactura(Factura $factura)
     {
-        return $this->goCurl('altaFactura', $factura->toAlta("123456"));
+        return $this->goCurl('altaFactura', $factura->toAlta());
     }
-    public function editFactura(Factura $factura, string $idFacturaAntigua)
+    public function consultaFactura(Factura $factura):bool
     {
-        return $this->goCurl('altaFactura', $factura->toEdit("123456" , $idFacturaAntigua));
+        return $this->goCurl('consultInvoice', $factura->toConsulta());
     }
-    public function consultCompany($data)
+    public function editFactura(Factura $factura)
     {
-        return $this->goCurl('consultCompany', $data)->Exist;
+        return $this->goCurl('altaFactura', $factura->toEdit());
     }
-    public function createCompany($data)
+    public function consultCompany(Empresa $empresa)
     {
-        return $this->goCurl('createCompany',$data);
+        return $this->goCurl('consultCompany', $empresa->toConsulta())->Exist;
     }
-    public function getQR($invoiceID)
+    public function createCompany(Empresa $empresa)
     {
-        $data = new \stdClass();
-        $data->id = $invoiceID;
-        return $this->goCurl('getQR', $data);
+        return $this->goCurl('createCompany',$empresa->toCreate());
+    }
+    public function getQR(Factura $factura)
+    {
+        return $this->goCurl('getQR', $factura->toQR());
     }
 }
