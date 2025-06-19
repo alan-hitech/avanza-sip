@@ -3,7 +3,7 @@
     "description": "Cliente PHP para avanzaSIP",
     "type": "library",
     "keywords": ["php", "enum", "verifactu", "avanzaSIP"],
-    "homepage": "https://github.com/alan-hitech/avazaSIP",
+    "homepage": "https://github.com/alan-hitech/avanza-sip",
     "license": "MIT",
     "authors": [
         {
