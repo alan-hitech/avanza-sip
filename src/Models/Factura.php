@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 use App\Enums\TipoFactura;
+use App\Enums\TipoRectificativa;
 use DateTime;
 use InvalidArgumentException;
 use stdClass;
@@ -266,6 +267,43 @@ class Factura
         return $this->toAlta(edit: true);
     }
 
+    public function toRectificativa(TipoRectificativa $tipoRec, Factura $rectificada): \stdClass{
+
+        $data = new stdClass();
+        $data->Cabecera = new stdClass();
+        $data->Cabecera->NIF = $this->empresa->CIF;
+        $data->RegistroFactura = new stdClass();
+        $data->RegistroFactura->RegistroAlta = new stdClass();
+        $data->RegistroFactura->RegistroAlta->IDFactura = new stdClass();
+        $data->RegistroFactura->RegistroAlta->IDFactura->NumSerieFactura = $this->serie . $this->numFactura;
+        $data->RegistroFactura->RegistroAlta->IDFactura->FechaExpedicionFactura = $this->fechaEmision->format('d-m-Y');;
+        $data->RegistroFactura->RegistroAlta->NombreRazonEmisor = $this->empresa->RazonSocial;
+        $data->RegistroFactura->RegistroAlta->TipoFactura = $this->tipoFactura;
+        $data->RegistroFactura->RegistroAlta->TipoRectificativa = $tipoRec;
+        $data->RegistroFactura->RegistroAlta->FacturasRectificadas = new stdClass();
+        $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada = new stdClass();
+        $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada->IDEmisorFactura = $rectificada->empresa->CIF;
+        $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada->NumSerieFactura = $rectificada->serie . $rectificada->numFactura;
+        $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada->FechaExpedicionFactura = $rectificada->fechaEmision->format('d-m-Y');;
+        $data->RegistroFactura->RegistroAlta->ImporteRectificacion = new stdClass();
+        $data->RegistroFactura->RegistroAlta->ImporteRectificacion->BaseRectificada = 0;
+        $data->RegistroFactura->RegistroAlta->ImporteRectificacion->CuotaRectificada = 0;
+        $data->RegistroFactura->RegistroAlta->DescripcionOperacion = $this->descripcion;
+        $data->RegistroFactura->RegistroAlta->ImporteTotal = 0;
+        $data->RegistroFactura->RegistroAlta->CuotaTotal = 0;
+        foreach ($this->impuestosDetalle as $detalle) {
+            $data->RegistroFactura->RegistroAlta->ImporteTotal += $detalle->getBaseImponible() + $detalle->getCuota();
+            $data->RegistroFactura->RegistroAlta->CuotaTotal += $detalle->getCuota();
+            $data->RegistroFactura->RegistroAlta->ImporteRectificacion->BaseRectificada += $detalle->getBaseImponible();
+            $data->RegistroFactura->RegistroAlta->DetalleDesglose[] = $detalle->aFactura();
+        }
+        $data->RegistroFactura->RegistroAlta->ImporteRectificacion->BaseRectificada=number_format($data->RegistroFactura->RegistroAlta->ImporteRectificacion->BaseRectificada, 2,'.',"");
+        $data->RegistroFactura->RegistroAlta->ImporteRectificacion->CuotaRectificada =number_format($data->RegistroFactura->RegistroAlta->CuotaTotal, 2,'.',"");
+        $data->RegistroFactura->RegistroAlta->ImporteTotal = number_format($data->RegistroFactura->RegistroAlta->ImporteTotal, 2,'.',"");
+        $data->RegistroFactura->RegistroAlta->CuotaTotal = number_format($data->RegistroFactura->RegistroAlta->CuotaTotal, 2,'.',"");
+        
+        return $data;
+    }
     public function toConsulta(): \stdClass
     {
         $data = new stdClass();

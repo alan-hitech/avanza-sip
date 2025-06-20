@@ -2,8 +2,6 @@
 
 namespace App\Enums;
 
-use App\Enums\Enum;
-
 trait BaseEnums
 {
     

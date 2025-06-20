@@ -1,6 +1,6 @@
 <?php
 
-require 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 use Dotenv\Dotenv;
 use App\Classes\AvanzaSIP;
 use App\Classes\Encrypt;
@@ -8,6 +8,7 @@ use App\Enums\CalificacionOperacion;
 use App\Enums\OperacionExcenta;
 use App\Enums\TipoFactura;
 use App\Enums\TipoImpuesto;
+use App\Enums\TipoRectificativa;
 use App\Models\Client;
 use App\Models\Empresa;
 use App\Models\Factura;
@@ -34,19 +35,16 @@ if(!$avanzaSIP->consultCompany($empresa)){
     $responseCC = $avanzaSIP->createCompany($empresa);
     var_dump($responseCC);
 } else {
-    $factura = new Factura(
-        serie: "W",
+    $rectifica = new Factura(
+        serie: "WW",
         numFactura: "00001",
-        fechaEmision: new \DateTime(),
+        fechaEmision: (new \DateTime())->setDate(2025,6,2),
         tipoFactura: TipoFactura::FACTURA,
         descripcion: "Servicios",
         client: $client,
         empresa: $empresa,
     );
-    var_dump($avanzaSIP->consultaFactura($factura));
-    die();
-    $factura->setSerie("T");
-    $impuesto = new FacturaImpuesto(
+    $rectificaIm = new FacturaImpuesto(
         tipoImpuesto: TipoImpuesto::IVA,
         regimen: "01",
         calificacionOperacion: CalificacionOperacion::OPERACION_SUJETA,
@@ -54,9 +52,29 @@ if(!$avanzaSIP->consultCompany($empresa)){
         baseImponible: 1000,
         cuota: 210
     );
+    $rectifica->addImpuestoDetalle($rectificaIm);
+    //$avanzaSIP->altaFactura($rectifica);
+    $factura = new Factura(
+        serie: "RW",
+        numFactura: "00001",
+        fechaEmision: (new \DateTime())->setDate(2025,6,19),
+        tipoFactura: TipoFactura::RECTIFICATIVA_ART_80_UNO_DOS_SEIS,
+        descripcion: "Servicios",
+        client: $client,
+        empresa: $empresa,
+    );
+    $impuesto = new FacturaImpuesto(
+        tipoImpuesto: TipoImpuesto::IVA,
+        regimen: "01",
+        calificacionOperacion: CalificacionOperacion::OPERACION_SUJETA,
+        impuesto: 21,
+        baseImponible: 100,
+        cuota: 21
+    );
     $factura->addImpuestoDetalle($impuesto);
-
-    $responseInvoice = $avanzaSIP->altaFactura($factura);
+    $responseInvoice = $avanzaSIP->rectificativa($factura, TipoRectificativa::SUSTITUCION, $rectifica);
+    var_dump($responseInvoice);
+    return;
     if(isset($responseInvoice->id)){
         echo $responseInvoice->id.' - PRIMEWRA FAC';
         $factura->setOriginalID($responseInvoice->id);

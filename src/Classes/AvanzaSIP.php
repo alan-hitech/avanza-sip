@@ -3,6 +3,7 @@ namespace App\Classes;
 
 use App\Models\Factura;
 use App\Models\Empresa;
+use App\Enums\TipoRectificativa;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -129,6 +130,10 @@ class AvanzaSIP
     public function editFactura(Factura $factura)
     {
         return $this->goCurl('altaFactura', $factura->toEdit());
+    }
+    public function rectificativa(Factura $factura, TipoRectificativa $tipoRec, Factura $rectificada)
+    {
+        return $this->goCurl('altaFactura', $factura->toRectificativa($tipoRec, $rectificada));
     }
     public function consultCompany(Empresa $empresa)
     {
