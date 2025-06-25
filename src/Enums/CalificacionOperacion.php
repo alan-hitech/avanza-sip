@@ -2,7 +2,6 @@
 
 namespace App\Enums;
 
-use Ap
 enum CalificacionOperacion: string
 {
     use BaseEnums;
