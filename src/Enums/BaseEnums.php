@@ -4,7 +4,7 @@ namespace AvanzaSip\Enums;
 
 trait BaseEnums
 {
-    
+
     /**
      * Verifica si un tipo de impuesto es válido
      *
@@ -35,5 +35,19 @@ trait BaseEnums
             }
         }
         return null;
+    }
+
+    /**
+     * Devuelve un array con todos los casos del enum y sus descripciones
+     *
+     * @return array Array asociativo donde las claves son los valores del enum y los valores son las descripciones
+     */
+    public static function toArray(): array
+    {
+        $result = [];
+        foreach (self::cases() as $case) {
+            $result[$case->value] = $case->getDescripcion();
+        }
+        return $result;
     }
 }
