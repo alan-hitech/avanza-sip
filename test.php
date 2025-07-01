@@ -2,17 +2,17 @@
 
 require __DIR__ . '/vendor/autoload.php';
 use Dotenv\Dotenv;
-use App\Classes\AvanzaSIP;
-use App\Classes\Encrypt;
-use App\Enums\CalificacionOperacion;
-use App\Enums\OperacionExcenta;
-use App\Enums\TipoFactura;
-use App\Enums\TipoImpuesto;
-use App\Enums\TipoRectificativa;
-use App\Models\Client;
-use App\Models\Empresa;
-use App\Models\Factura;
-use App\Models\FacturaImpuesto;
+use AvanzaSip\Classes\AvanzaSIP;
+use AvanzaSip\Classes\Encrypt;
+use AvanzaSip\Enums\CalificacionOperacion;
+use AvanzaSip\Enums\OperacionExcenta;
+use AvanzaSip\Enums\TipoFactura;
+use AvanzaSip\Enums\TipoImpuesto;
+use AvanzaSip\Enums\TipoRectificativa;
+use AvanzaSip\Models\Client;
+use AvanzaSip\Models\Empresa;
+use AvanzaSip\Models\Factura;
+use AvanzaSip\Models\FacturaImpuesto;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
@@ -40,7 +40,7 @@ if(!$avanzaSIP->consultCompany($empresa)){
         numFactura: "00001",
         fechaEmision: (new \DateTime())->setDate(2025,6,2),
         tipoFactura: TipoFactura::FACTURA,
-        descripcion: "Servicios",
+        descripcion: "Rectificación Factura de formación",
         client: $client,
         empresa: $empresa,
     );

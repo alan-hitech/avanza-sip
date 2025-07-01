@@ -1,5 +1,5 @@
 <?php
-namespace App\Enums;
+namespace AvanzaSip\Enums;
 
 enum TipoImpuesto: string
 {

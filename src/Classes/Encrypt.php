@@ -1,5 +1,5 @@
 <?php
-namespace App\Classes;
+namespace AvanzaSip\Classes;
 use Exception;
 use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Crypt\RSA;

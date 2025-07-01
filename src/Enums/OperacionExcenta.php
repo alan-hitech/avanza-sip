@@ -1,10 +1,15 @@
 <?php
 
-namespace App\Enums;
+namespace AvanzaSip\Enums;
 
 enum OperacionExcenta: string
 {
     use BaseEnums;
+
+    /**
+     * TODO:
+     * sempre E1
+     */
     case EXCENTA_20 = 'E1';
     case EXCENTA_21 = 'E2';
     case EXCENTA_22 = 'E3';

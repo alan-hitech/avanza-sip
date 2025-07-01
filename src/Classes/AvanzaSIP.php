@@ -1,9 +1,9 @@
 <?php
-namespace App\Classes;
+namespace AvanzaSip\Classes;
 
-use App\Models\Factura;
-use App\Models\Empresa;
-use App\Enums\TipoRectificativa;
+use AvanzaSip\Models\Factura;
+use AvanzaSip\Models\Empresa;
+use AvanzaSip\Enums\TipoRectificativa;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 

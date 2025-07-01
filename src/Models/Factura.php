@@ -1,7 +1,7 @@
 <?php
-namespace App\Models;
-use App\Enums\TipoFactura;
-use App\Enums\TipoRectificativa;
+namespace AvanzaSip\Models;
+use AvanzaSip\Enums\TipoFactura;
+use AvanzaSip\Enums\TipoRectificativa;
 use DateTime;
 use InvalidArgumentException;
 use stdClass;

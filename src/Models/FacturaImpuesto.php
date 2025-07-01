@@ -1,8 +1,8 @@
 <?php
-namespace App\Models;
-use App\Enums\CalificacionOperacion;
-use App\Enums\OperacionExcenta;
-use App\Enums\TipoImpuesto;
+namespace AvanzaSip\Models;
+use AvanzaSip\Enums\CalificacionOperacion;
+use AvanzaSip\Enums\OperacionExcenta;
+use AvanzaSip\Enums\TipoImpuesto;
 
 class FacturaImpuesto
 {

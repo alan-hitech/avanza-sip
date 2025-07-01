@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace AvanzaSip\Enums;
 
 enum TipoFactura: string
 {
@@ -8,13 +8,13 @@ enum TipoFactura: string
     // Facturas normales
     case FACTURA = 'F1';
     case FACTURA_SIMPLIFICADA = 'F2';
-    case FACTURA_SUSTITUCION = 'F3';
+    case FACTURA_SUSTITUCION = 'F3'; /* TODO: si canvia valor */
 
     // Facturas rectificativas
     case RECTIFICATIVA_ERROR_DERECHO = 'R1';
     case RECTIFICATIVA_ART_80_UNO_DOS_SEIS = 'R2';
     case RECTIFICATIVA_ART_80_TRES = 'R3';
-    case RECTIFICATIVA_RESTO = 'R4';
+    case RECTIFICATIVA_RESTO = 'R4';/** TODO: impago */
     case RECTIFICATIVA_SIMPLIFICADA = 'R5';
 
     /**

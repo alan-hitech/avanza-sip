@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Enums;
+namespace AvanzaSip\Enums;
 
 enum TipoRectificativa: string
 {
     use BaseEnums;
-    case SUSTITUCION = 'S';
+    case SUSTITUCION = 'S'; /** Sempre S */
+
     case DIFERENCIAS= 'I';
     /**
      * Obtiene la descripción de un tipo de calificación de operación

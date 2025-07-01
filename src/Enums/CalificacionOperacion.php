@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Enums;
+namespace AvanzaSip\Enums;
 
 enum CalificacionOperacion: string
 {
     use BaseEnums;
     // OPERACIONES SUJETAS
     case OPERACION_SUJETA = 'S1';
+    // TODO: sempre S1
     case OPERACION_SUJETA_PASIVO = 'S2';
 
     // OPERACIONES NO SUJETAS
