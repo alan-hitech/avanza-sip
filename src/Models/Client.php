@@ -1,5 +1,9 @@
 <?php
+
 namespace AvanzaSip\Models;
+
+use AvanzaSip\Enums\TipoNIF;
+
 /**
  *
  */
@@ -13,15 +17,19 @@ class Client
      * @var string
      */
     public string $RazonSocial;
+    public bool $nacional;
+    public TipoNIF $tipoNIF;
 
     /**
      * @param string $NIF
      * @param string $RazonSocial
      */
-    public function __construct(string $NIF, string $RazonSocial)
+    public function __construct(string $NIF, string $RazonSocial, bool $nacional = true, TipoNIF $tipoNIF = TipoNIF::NIF)
     {
         $this->NIF = $NIF;
         $this->RazonSocial = $RazonSocial;
+        $this->tipoNIF = $tipoNIF;
+        $this->nacional = $nacional;
     }
 
     /**
@@ -54,6 +62,26 @@ class Client
     public function setRazonSocial(string $RazonSocial): void
     {
         $this->RazonSocial = $RazonSocial;
+    }
+
+    public function isNacional(): bool
+    {
+        return $this->nacional;
+    }
+
+    public function setNacional(bool $nacional): void
+    {
+        $this->nacional = $nacional;
+    }
+
+    public function getTipoNIF(): TipoNIF
+    {
+        return $this->tipoNIF;
+    }
+
+    public function setTipoNIF(TipoNIF $tipoNIF): void
+    {
+        $this->tipoNIF = $tipoNIF;
     }
 
 }
