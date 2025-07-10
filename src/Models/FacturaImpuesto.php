@@ -2,12 +2,13 @@
 namespace AvanzaSip\Models;
 use AvanzaSip\Enums\CalificacionOperacion;
 use AvanzaSip\Enums\OperacionExcenta;
+use AvanzaSip\Enums\Regimen;
 use AvanzaSip\Enums\TipoImpuesto;
 
 class FacturaImpuesto
 {
     public TipoImpuesto $tipoImpuesto;
-    public string $regimen;
+    public Regimen $regimen;
     public CalificacionOperacion $calificacionOperacion;
     public float $impuesto;
     public float $baseImponible;
@@ -15,13 +16,13 @@ class FacturaImpuesto
     public ?OperacionExcenta $excenta = null;
     /**
      * @param TipoImpuesto $tipoImpuesto
-     * @param string $regimen
+     * @param Regimen $regimen
      * @param CalificacionOperacion $calificacionOperacion
      * @param float $impuesto
      * @param float $baseImponible
      * @param float $cuota
      */
-    public function __construct(TipoImpuesto $tipoImpuesto, string $regimen, CalificacionOperacion $calificacionOperacion, float $impuesto, float $baseImponible, float $cuota, $excenta = null)
+    public function __construct(TipoImpuesto $tipoImpuesto, Regimen $regimen, CalificacionOperacion $calificacionOperacion, float $impuesto, float $baseImponible, float $cuota, $excenta = null)
     {
         $this->tipoImpuesto = $tipoImpuesto;
         $this->regimen = $regimen;
@@ -51,7 +52,7 @@ class FacturaImpuesto
     /**
      * @return string
      */
-    public function getRegimen(): string
+    public function getRegimen(): Regimen
     {
         return $this->regimen;
     }
@@ -59,7 +60,7 @@ class FacturaImpuesto
     /**
      * @param string $regimen
      */
-    public function setRegimen(string $regimen): void
+    public function setRegimen(Regimen $regimen): void
     {
         $this->regimen = $regimen;
     }
