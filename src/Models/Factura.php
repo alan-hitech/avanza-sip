@@ -20,6 +20,7 @@ class Factura
     public float $impuestos;
     public array $impuestosDetalle;
     public ?string $originalID;
+    public ?TipoRectificativa $tipoRectificativa = null;
     /**
      * @return string
      */
@@ -139,6 +140,17 @@ class Factura
     {
         return $this->impuestosDetalle;
     }
+
+    public function getTipoRectificativa(): ?TipoRectificativa
+    {
+        return $this->tipoRectificativa;
+    }
+
+    public function setTipoRectificativa(?TipoRectificativa $tipoRectificativa): void
+    {
+        $this->tipoRectificativa = $tipoRectificativa;
+    }
+
 
     /**
      * @param array $impuestosDetalle
@@ -261,7 +273,6 @@ class Factura
         }
         $data->RegistroFactura->RegistroAlta->ImporteTotal = number_format($data->RegistroFactura->RegistroAlta->ImporteTotal, 2,'.',"");
         $data->RegistroFactura->RegistroAlta->CuotaTotal = number_format($data->RegistroFactura->RegistroAlta->CuotaTotal, 2,'.',"");
-        var_dump($data);
         return $data;
     }
 
@@ -270,8 +281,7 @@ class Factura
         return $this->toAlta(edit: true);
     }
 
-    public function toRectificativa(TipoRectificativa $tipoRec, Factura $rectificada): \stdClass{
-
+    public function toRectificativa(Factura $rectificada): \stdClass{
         $data = new stdClass();
         $data->serie = $this->serie;
         $data->numero = $this->numFactura;
@@ -287,7 +297,7 @@ class Factura
         $data->RegistroFactura->RegistroAlta->IDFactura->FechaExpedicionFactura = $this->fechaEmision->format('d-m-Y');;
         $data->RegistroFactura->RegistroAlta->NombreRazonEmisor = $this->empresa->RazonSocial;
         $data->RegistroFactura->RegistroAlta->TipoFactura = $this->tipoFactura;
-        $data->RegistroFactura->RegistroAlta->TipoRectificativa = $tipoRec;
+        $data->RegistroFactura->RegistroAlta->TipoRectificativa = $this->tipoRectificativa;
         $data->RegistroFactura->RegistroAlta->Destinatarios = new stdClass();
         $data->RegistroFactura->RegistroAlta->Destinatarios->IDDestinatario = new stdClass();
         $data->RegistroFactura->RegistroAlta->Destinatarios->IDDestinatario->NIF = $this->client->NIF;
