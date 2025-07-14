@@ -21,7 +21,7 @@ enum TipoNIF: string
     public function getDescripcion(): string
     {
         return match ($this) {
-            self::NIF => 'NIF_IVA',
+            self::NIF => 'NIF o IVA',
             self::PASSPORT => 'Pasaporte',
             self::DOC_OF => 'Doc. oficial',
             self::CERT => 'Certificado',
