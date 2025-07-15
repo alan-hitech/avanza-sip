@@ -285,7 +285,7 @@ class AvanzaSIP
             'success' => true,
             'status' => $response['status'] ?? '',
             'message' => 'Factura aceptada',
-            'response' => $response ?? null
+            'response' => '',//$response ?? null
         ];
         if (isset($response->success) && !$response->success) {
             Log::error(['response' => json_encode($response)]);
