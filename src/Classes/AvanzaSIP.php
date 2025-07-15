@@ -6,6 +6,7 @@ use AvanzaSip\Models\Empresa;
 use AvanzaSip\Enums\TipoRectificativa;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use http\Message;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -181,21 +182,47 @@ class AvanzaSIP
         try {
             $response = $client->request($method, "{$endpoint}/", $options);
             $responseBody = $response->getBody()->getContents();
-            if($this->debug) {
-                echo "\nResponse: {$responseBody}\nError: \n";
+
+            $result = json_decode($responseBody, true);
+            if (isset($result['error_code'])) {
+                return [
+                    'success' => false,
+                    'status' => $result['error_code'],
+                    'message' => $response['error_message'],
+                    'response' => '',//$response ?? null
+                ];
             }
-            $result = json_decode($responseBody);
-            if (isset($result->error_code)) {
-                throw new \Exception($result->error_message, $result->error_code);
-            }
-            if(isset($response->success) && !$response->success){
+            if(isset($response['success']) && !$response['success']){
                 Log::error(['response' => json_encode($response)]);
-                throw new \Exception('Error al enviar la factura a AvanzaSif: ' . $response->error_message,  $response->error_code);
+                return [
+                    'success' => false,
+                    'status' => $result['error_code'],
+                    'message' =>$response['error_message'],
+                    'response' => '',//$response ?? null
+                ];
             }
+            $result['success'] = true;
             return $result;
         } catch (GuzzleException $e) {
-            echo "\nError: {$e->getMessage()}\n";
-            throw new \Exception("Request failed: " . $e->getMessage(), $e->getCode());
+            $response = $e->getResponse();
+            $statusCode = $response->getStatusCode();
+            $body = $response->getBody()->getContents();
+            $jsonData = json_decode($body, true);
+            //dd($jsonData);
+            return [
+                'success' => false,
+                'status' => $jsonData['error_code'],
+                'message' => 'Error al enviar la factura a AvanzaSif: ' . $jsonData['error_message'],
+                'response' => '',//$response ?? null
+            ];
+        }
+        catch (\Exception $e) {
+            return [
+                'success' => false,
+                'status' => $e->getCode(),
+                'message' => 'Error al enviar la factura a AvanzaSif: ' . $e->getMessage(),
+                'response' => $e->getTrace(),//$response ?? null
+            ];
         }
     }
 
@@ -206,8 +233,7 @@ class AvanzaSIP
      */
     public function altaFactura(Factura $factura)
     {
-        $response = $this->goCurl('altaFactura', $factura->toAlta());
-        return $this->makeinvoiceResponse($response);
+        return $this->goCurl('altaFactura', $factura->toAlta());
     }
 
     /**
@@ -228,8 +254,7 @@ class AvanzaSIP
      */
     public function editFactura(Factura $factura)
     {
-        $response = $this->goCurl('altaFactura', $factura->toEdit());
-        return $this->makeinvoiceResponse($response);
+        return $this->goCurl('altaFactura', $factura->toEdit());
     }
 
     /**
@@ -240,8 +265,7 @@ class AvanzaSIP
      */
     public function rectificativa(Factura $factura, Factura $rectificada)
     {
-        $response = $this->goCurl('altaFactura', $factura->toRectificativa($rectificada));
-        return $this->makeinvoiceResponse($response);
+        return $this->goCurl('altaFactura', $factura->toRectificativa($rectificada));
     }
 
     /**
