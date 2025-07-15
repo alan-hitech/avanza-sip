@@ -182,27 +182,11 @@ class AvanzaSIP
         try {
             $response = $client->request($method, "{$endpoint}/", $options);
             $responseBody = $response->getBody()->getContents();
-
             $result = json_decode($responseBody, true);
-            if (isset($result['error_code'])) {
-                return [
-                    'success' => false,
-                    'status' => $result['error_code'],
-                    'message' => $response['error_message'],
-                    'response' => '',//$response ?? null
-                ];
-            }
-            if(isset($response['success']) && !$response['success']){
-                Log::error(['response' => json_encode($response)]);
-                return [
-                    'success' => false,
-                    'status' => $result['error_code'],
-                    'message' =>$response['error_message'],
-                    'response' => '',//$response ?? null
-                ];
-            }
-            $result['success'] = true;
-            return $result;
+            return [
+                'success' => true,
+                'response' => $result
+            ];
         } catch (GuzzleException $e) {
             $response = $e->getResponse();
             $statusCode = $response->getStatusCode();
@@ -275,7 +259,8 @@ class AvanzaSIP
      */
     public function consultCompany(Empresa $empresa)
     {
-        return $this->goCurl('consultCompany', $empresa->toConsulta())->Exist;
+        $q = $this->goCurl('consultCompany', $empresa->toConsulta());
+        return $q['response']['Exist'];
     }
 
     /**
