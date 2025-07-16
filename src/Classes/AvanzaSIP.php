@@ -159,9 +159,6 @@ class AvanzaSIP
             'verify' =>  !$this->test,
         ]);
         $data->Password = $this->password;
-        if($this->debug) {
-            var_dump(json_encode($data));
-        }
         $options = [
             'headers' => [
                 'Authorization' => "Token {$this->authToken}"
@@ -178,7 +175,6 @@ class AvanzaSIP
                 ]
             ]
         ];
-
         try {
             $response = $client->request($method, "{$endpoint}/", $options);
             $responseBody = $response->getBody()->getContents();
