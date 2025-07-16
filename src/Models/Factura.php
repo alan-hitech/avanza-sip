@@ -303,11 +303,13 @@ class Factura
         $data->RegistroFactura->RegistroAlta->Destinatarios->IDDestinatario->NIF = $this->client->NIF;
         $data->RegistroFactura->RegistroAlta->Destinatarios->IDDestinatario->NombreRazon = $this->client->RazonSocial;
         $data->RegistroFactura->RegistroAlta->FacturasRectificadas = new stdClass();
-        $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada = new stdClass();
-        $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada->IDEmisorFactura = $rectificada->empresa->CIF;
-        $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada->NumSerieFactura = $rectificada->serie . $rectificada->numFactura;
-        $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada->FechaExpedicionFactura = $rectificada->fechaEmision->format('d-m-Y');;
+        $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada = [];
+        $facRec = new stdClass();
+        $facRec->IDEmisorFactura = $rectificada->empresa->CIF;
+        $facRec->NumSerieFactura = $rectificada->serie . $rectificada->numFactura;
+        $facRec->FechaExpedicionFactura = $rectificada->fechaEmision->format('d-m-Y');;
         $data->RegistroFactura->RegistroAlta->ImporteRectificacion = new stdClass();
+        $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada[] = $facRec;
         $rectificada->calcular();
         $data->RegistroFactura->RegistroAlta->ImporteRectificacion->BaseRectificada=number_format($rectificada->baseImponible, 2,'.',"");
         $data->RegistroFactura->RegistroAlta->ImporteRectificacion->CuotaRectificada =number_format($rectificada->impuestos, 2,'.',"");
