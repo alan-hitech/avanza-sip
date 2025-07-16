@@ -194,6 +194,7 @@ class AvanzaSIP
                 'status' => $jsonData['error_code'],
                 'message' => 'Error al enviar la factura a AvanzaSif: ' . $jsonData['error_message'],
                 'response' => '',//$response ?? null
+                'data' => $data
             ];
         }
         catch (\Exception $e) {
@@ -202,6 +203,7 @@ class AvanzaSIP
                 'status' => $e->getCode(),
                 'message' => 'Error al enviar la factura a AvanzaSif: ' . $e->getMessage(),
                 'response' => $e->getTrace(),//$response ?? null
+                'data' => $data
             ];
         }
     }
