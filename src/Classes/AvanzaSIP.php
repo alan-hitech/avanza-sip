@@ -225,7 +225,7 @@ class AvanzaSIP
      * @return bool
      * @throws \Exception
      */
-    public function consultaFactura(Factura|string $factura):bool
+    public function consultaFactura(Factura $factura):bool
     {
         return $this->goCurl('consultInvoice', $factura->toConsulta());
     }
