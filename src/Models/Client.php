@@ -84,4 +84,14 @@ class Client
         $this->tipoNIF = $tipoNIF;
     }
 
+    public function toValidateName(): \stdClass
+    {
+        $data = new \stdClass();
+        $data->contribuientes  = [];
+        $c = new \stdClass();
+        $c->nif = $this->NIF;
+        $c->nombre = $this->RazonSocial;
+        $data->contribuientes[] = $c;
+        return $data;
+    }
 }

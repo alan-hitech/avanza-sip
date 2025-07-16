@@ -225,10 +225,9 @@ class AvanzaSIP
      * @return bool
      * @throws \Exception
      */
-    public function consultaFactura(Factura $factura):bool
+    public function consultaFactura(Factura|string $factura):bool
     {
         return $this->goCurl('consultInvoice', $factura->toConsulta());
-
     }
 
     /**
@@ -281,6 +280,10 @@ class AvanzaSIP
     public function getQR(Factura $factura)
     {
         return $this->goCurl('getQR', $factura->toQR());
+    }
+    public function validateName(\AvanzaSip\Models\Client $client)
+    {
+        return $this->goCurl('validateName', $client->toValidateName())->success;
     }
 
     /**
