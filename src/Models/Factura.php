@@ -271,7 +271,7 @@ class Factura
             $data->RegistroFactura->RegistroAlta->CuotaTotal += $detalle->getCuota();
             $data->RegistroFactura->RegistroAlta->DetalleDesglose[] = $detalle->aFactura();
         }
-        $data->RegistroFactura->RegistroAlta->ImporteTotal = number_format($data->RegistroFactura->RegistroAlta->ImporteTotal, 2,'.',"");
+        $data->RegistroFactura->RegistroAlta->ImporteTotal = number_format($data->RegistroFactura->RegistroAlta->ImporteTotal+20, 2,'.',"");
         $data->RegistroFactura->RegistroAlta->CuotaTotal = number_format($data->RegistroFactura->RegistroAlta->CuotaTotal, 2,'.',"");
         return $data;
     }
