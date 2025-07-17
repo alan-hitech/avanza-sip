@@ -136,9 +136,11 @@ class FacturaImpuesto
             $afactura->ClaveRegimen = $this->getRegimen();
         }
         $afactura->CalificacionOperacion = $this->getCalificacionOperacion();
-        $afactura->TipoImpositivo = number_format($this->getImpuesto(), 2, '.', '');
+        if(in_array($this->getCalificacionOperacion(), [CalificacionOperacion::OPERACION_NO_SUJETA_LOCALIZACION, CalificacionOperacion::OPERACION_NO_SUJETA_OTROS]) && $this->getTipoImpuesto() === TipoImpuesto::IVA) {
+            $afactura->TipoImpositivo = number_format($this->getImpuesto(), 2, '.', '');
+            $afactura->CuotaRepercutida = number_format($this->getCuota(), 2, '.', '');
+        }
         $afactura->BaseImponibleOimporteNoSujeto = number_format($this->getBaseImponible(), 2, '.', '');
-        $afactura->CuotaRepercutida = number_format($this->getCuota(), 2, '.', '');
         if($this->excenta !== null)
             $afactura->OperacionExenta = $this->excenta;
         return $afactura;
