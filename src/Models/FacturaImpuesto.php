@@ -132,7 +132,9 @@ class FacturaImpuesto
     {
         $afactura = new \stdClass();
         $afactura->Impuesto = $this->getTipoImpuesto();
-        $afactura->ClaveRegimen = $this->getRegimen();
+        if(in_array($this->getImpuesto(), [Regimen::GENERAL, Regimen::BIENES_USADOS])) {
+            $afactura->ClaveRegimen = $this->getRegimen();
+        }
         $afactura->CalificacionOperacion = $this->getCalificacionOperacion();
         $afactura->TipoImpositivo = number_format($this->getImpuesto(), 2, '.', '');
         $afactura->BaseImponibleOimporteNoSujeto = number_format($this->getBaseImponible(), 2, '.', '');
