@@ -132,7 +132,7 @@ class FacturaImpuesto
     {
         $afactura = new \stdClass();
         $afactura->Impuesto = $this->getTipoImpuesto();
-        if(in_array($this->getImpuesto(), [Regimen::GENERAL, Regimen::BIENES_USADOS])) {
+        if(in_array($this->getImpuesto(), [Regimen::GENERAL, Regimen::BIENES_USADOS], true)) {
             $afactura->ClaveRegimen = $this->getRegimen();
         }
         $afactura->CalificacionOperacion = $this->getCalificacionOperacion();
