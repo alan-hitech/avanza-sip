@@ -311,8 +311,10 @@ class Factura
         $data->RegistroFactura->RegistroAlta->ImporteRectificacion = new stdClass();
         $data->RegistroFactura->RegistroAlta->FacturasRectificadas->IDFacturaRectificada[] = $facRec;
         $rectificada->calcular();
-        $data->RegistroFactura->RegistroAlta->ImporteRectificacion->BaseRectificada=number_format($rectificada->baseImponible, 2,'.',"");
-        $data->RegistroFactura->RegistroAlta->ImporteRectificacion->CuotaRectificada =number_format($rectificada->impuestos, 2,'.',"");
+        if(TipoRectificativa::SUSTITUCION === $this->tipoRectificativa) {
+            $data->RegistroFactura->RegistroAlta->ImporteRectificacion->BaseRectificada = number_format($rectificada->baseImponible, 2, '.', "");
+            $data->RegistroFactura->RegistroAlta->ImporteRectificacion->CuotaRectificada = number_format($rectificada->impuestos, 2, '.', "");
+        }
         $data->RegistroFactura->RegistroAlta->DescripcionOperacion = $this->descripcion;
         $data->RegistroFactura->RegistroAlta->ImporteTotal = 0;
         $data->RegistroFactura->RegistroAlta->CuotaTotal = 0;
